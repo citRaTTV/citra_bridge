@@ -11,4 +11,6 @@ local function setupBridge()
     }
 end
 
+if lib.context == 'server' then lib.versionCheck('citRaTTV/citra_bridge') end
+
 _ENV.bridge = setupBridge()
