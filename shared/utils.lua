@@ -49,7 +49,7 @@ local util = {
         else
             local framework = self:getFramework()
             if framework?.dispatch then
-                lib.print.warn('No supported dispatch found. Falling back to framework dispatch. This will have limited functionality')
+                if lib.context == 'server' then lib.print.warn('No supported dispatch found. Falling back to framework dispatch. This will have limited functionality') end
                 return framework.dispatch
             end
 
