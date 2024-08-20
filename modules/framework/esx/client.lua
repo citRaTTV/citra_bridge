@@ -8,6 +8,12 @@ local ESXFramework = lib.class('ESXFramework', classes.FrameworkClient)
 
 function ESXFramework:contructor()
     self:super()
+    if config.notify == 'framework' then
+        self.notifyMap = {
+            warn = 'error',
+            inform = 'info',
+        }
+    end
 end
 
 function ESXFramework:notify(msg, msgType, duration)
@@ -15,7 +21,8 @@ function ESXFramework:notify(msg, msgType, duration)
         self:notifyOx(msg, msgType, duration)
         return
     end
-    ESX.ShowNotification(msg, msgType == 'primary' and 'info' or msgType, duration)
+    msg = (type(msg) == 'table' and (msg.title or msg.description) or msg)
+    ESX.ShowNotification(msg, (self.notifyMap[msgType] or msgType), duration)
 end
 
 function ESXFramework:playerLoaded()

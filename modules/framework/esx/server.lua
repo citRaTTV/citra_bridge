@@ -7,6 +7,12 @@ local ESXFrameworkServer = lib.class('ESXFramework', classes.FrameworkServer)
 
 function ESXFrameworkServer:contructor()
     self:super()
+    if config.notify == 'framework' then
+        self.notifyMap = {
+            warn = 'error',
+            inform = 'info',
+        }
+    end
 end
 
 function ESXFrameworkServer:getPlayer(source)
@@ -36,6 +42,10 @@ function ESXFrameworkServer:notify(source, msg, msgType, duration)
         return
     end
     if type(source) ~= 'table' then source = { source } end
+    msg = (type(msg) == 'table' and (msg.title or msg.description) or msg)
+    for i = 1, #source do
+        TriggerClientEvent('esx:showNotification', source[i], msg, (self.notifyMap[msgType] or msgType), duration)
+    end
 end
 
 function ESXFrameworkServer:isPlayerJob(source, job)

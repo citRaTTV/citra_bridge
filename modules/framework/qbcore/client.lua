@@ -12,6 +12,12 @@ local QBFramework = lib.class('QBFramework', classes.FrameworkClient)
 
 function QBFramework:contructor()
     self:super()
+    if config.notify == 'framework' then
+        self.notifyMap = {
+            warn = 'error',
+            inform = 'primary',
+        }
+    end
 end
 
 function QBFramework:notify(msg, msgType, duration)
@@ -19,7 +25,8 @@ function QBFramework:notify(msg, msgType, duration)
         self:notifyOx(msg, msgType, duration)
         return
     end
-    QBCore.Functions.Notify(msg, msgType, duration)
+    msg = (type(msg) == 'table' and (msg.title or msg.description) or msg)
+    QBCore.Functions.Notify(msg, (self.notifyMap[msgType] or msgType), duration)
 end
 
 function QBFramework:playerLoaded()

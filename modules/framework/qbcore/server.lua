@@ -8,6 +8,12 @@ local QBFrameworkServer = lib.class('QBFramework', classes.FrameworkServer)
 
 function QBFrameworkServer:contructor()
     self:super()
+    if config.notify == 'framework' then
+        self.notifyMap = {
+            warn = 'error',
+            inform = 'primary',
+        }
+    end
 end
 
 function QBFrameworkServer:getPlayer(source)
@@ -32,8 +38,9 @@ function QBFrameworkServer:notify(source, msg, msgType, duration)
         return
     end
     if type(source) ~= "table" then source = {source} end
+    msg = (type(msg) == 'table' and (msg.title or msg.description) or msg)
     for i = 1, #source do
-        TriggerClientEvent('QBCore:Notify', source[i], msg, msgType, duration)
+        TriggerClientEvent('QBCore:Notify', source[i], msg, (self.notifyMap[msgType] or msgType), duration)
     end
 end
 
