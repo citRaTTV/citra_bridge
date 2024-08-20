@@ -1,8 +1,8 @@
-local Generic = require 'shared.class'
+local classes = require 'shared.class'
 
 --- ps-dispatch bridge class
---- @class Dispatch : OxClass
-local PSDispatch = lib.class('PSDispatch', Generic)
+--- @class Dispatch : DispatchClient
+local PSDispatch = lib.class('PSDispatch', classes.DispatchClient)
 
 function PSDispatch:constructor()
     self:super()
@@ -21,7 +21,7 @@ end
 ---Sends a custom alert
 ---@param jobs table
 ---@param alertData table
-function PSDispatch:CustomAlert(jobs, alertData)
+function PSDispatch:customAlert(jobs, alertData)
     self:export('CustomAlert', {
         message = alertData.title or alertData.msg,
         code = alertData.code,
@@ -64,7 +64,7 @@ function PSDispatch:policeAlert(alertType, alertData)
     if alertType and self.typeMap[alertType] then
         self:export(self.typeMap[alertType])
     elseif alertData then
-        self:CustomAlert(bridge.framework.jobs.police?.type, alertData)
+        self:customAlert(bridge.framework.jobs.police?.type, alertData)
     else
         lib.print.error('Unable to send dispatch')
     end
@@ -77,7 +77,7 @@ function PSDispatch:emsAlert(alertType, alertData)
     if alertType and self.typeMap[alertType] then
         self:export(self.typeMap[alertType])
     elseif alertData then
-        self:CustomAlert(bridge.framework.jobs.ems?.type, alertData)
+        self:customAlert(bridge.framework.jobs.ems?.type, alertData)
     else
         lib.print.error('Unable to send dispatch')
     end

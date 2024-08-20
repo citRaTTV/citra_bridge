@@ -1,16 +1,14 @@
-local Generic = require 'shared.class'
+local classes = require 'shared.class'
+local util = require 'modules.util.server'
 local QBCore = exports['qb-core']:GetCoreObject()
 
----@class QBFrameworkServer : OxClass
-local QBFrameworkServer = lib.class('QBFramework', Generic)
+---@class QBFrameworkServer : FrameworkServer
+local QBFrameworkServer = lib.class('QBFramework', classes.FrameworkServer)
 
 function QBFrameworkServer:contructor()
     self:super()
 end
 
----Get Player object
----@param source string | integer @Player source or citizen ID
----@return table
 function QBFrameworkServer:getPlayer(source)
     local QPlayer = tonumber(source) and QBCore.Functions.GetPlayer(source) or (
         QBCore.Functions.GetPlayerByCitizenId(source) or QBCore.Functions.GetOfflinePlayerByCitizenId(source))
@@ -18,11 +16,15 @@ function QBFrameworkServer:getPlayer(source)
     return QPlayer
 end
 
----Notify one or more clients
----@param source table | string | integer
----@param msg string @Message to relay
----@param msgType string @['error', 'success', 'primary']
----@param duration integer @Duration in ms
+function QBFrameworkServer:getPlayerJob(source)
+    local QPlayer = self:getPlayer(source)
+    return {
+        name = QPlayer?.PlayerData?.job?.name,
+        type = QPlayer?.PlayerData?.job?.type,
+        grade = QPlayer?.PlayerData?.job?.grade?.level or 0,
+    }
+end
+
 function QBFrameworkServer:notify(source, msg, msgType, duration)
     if type(source) ~= "table" then source = {source} end
     for i = 1, #source do
@@ -30,31 +32,53 @@ function QBFrameworkServer:notify(source, msg, msgType, duration)
     end
 end
 
----Remove money from a player
----@param source string | integer @Player source or citizen ID
----@param account? string
----@param amount integer
----@param note? string
----@return boolean @If amount was successfully taken from player
+function QBFrameworkServer:isPlayerJob(source, job)
+    local QPlayer = self:getPlayer(source)
+    return (QPlayer and (QPlayer.PlayerData?.job?.name == job or QPlayer.PlayerData?.job?.type == job))
+end
+
 function QBFrameworkServer:removeMoney(source, account, amount, note)
     local QPlayer = self:getPlayer(source)
     if not QPlayer then return false end
     return QPlayer.Functions.RemoveMoney(account, amount, note)
 end
 
----Check if player is loaded
----@param source string | integer @Player source or citizen ID
----@return boolean
 function QBFrameworkServer:playerLoaded(source)
     local QPlayer = self:getPlayer(source)
     if not QPlayer then return false end
     return not QPlayer.Offline and Player(QPlayer.PlayerData.source).state.isLoggedIn
 end
 
----QBCore Dispatch
----@class QBDispatch : OxClass
-local QBDispatch = lib.class('QBDispatch', Generic)
+function QBFrameworkServer:getVehModelInfo(modelName)
+    local vehData = QBCore.Shared.Vehicles[modelName]
+    return {
+        make = vehData?.brand or 'Unknown Make',
+        model = vehData?.name or 'Unknown Model'
+    }
+end
 
-QBFrameworkServer.dispatch = QBDispatch
+function QBFrameworkServer:getPlayerVehs(source, colFilter)
+    local QPlayer = self:getPlayer(source)
+    if not QPlayer then return {} end
+    return util.db.select('player_vehicles', colFilter, { key = 'citizenid', value = QPlayer.PlayerData.citizenid })
+end
+
+function QBFrameworkServer:getOwnedVehs(colFilter, modelFilter)
+    local mFilter = {}
+    if modelFilter and #modelFilter > 0 then
+        for i = 1, #modelFilter do
+            mFilter[#mFilter+1] = {
+                key = 'vehicle',
+                value = modelFilter[i],
+            }
+        end
+    end
+    return util.db.select('player_vehicles', colFilter, mFilter)
+end
+
+function QBFrameworkServer:getOwnedVeh(plate, colFilter)
+    local vehs = util.db.select('player_vehicles', colFilter, { key = 'plate', value = plate })
+    return vehs and vehs[1]
+end
 
 return QBFrameworkServer

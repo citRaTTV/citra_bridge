@@ -1,8 +1,8 @@
-local Generic = require 'shared.class'
+local classes = require 'shared.class'
 
 --- CD Dispatch
---- @class CDDispatch : OxClass
-local CDDispatch = lib.class('Dispatch', Generic)
+--- @class CDDispatch : DispatchClient
+local CDDispatch = lib.class('Dispatch', classes.DispatchClient)
 
 function CDDispatch:constructor()
     self:super()
@@ -11,7 +11,7 @@ function CDDispatch:constructor()
 end
 
 ---Internal custom alert
-function CDDispatch:CustomAlert(jobs, alertData)
+function CDDispatch:customAlert(jobs, alertData)
     local data = self:export('GetPlayerInfo')
     TriggerServerEvent(self.resource .. ':AddNotification', {
         job_table = jobs,
@@ -19,7 +19,7 @@ function CDDispatch:CustomAlert(jobs, alertData)
         title = alertData.title or alertData.msg,
         message = ("%s (%s on %s)"):format(alertData.msg, alertData.player?.showGender and data.sex or 'Unknown', data.street),
         flash = 0,
-        unique_id = data.unique_id,
+        unique_id = data?.unique_id,
         sound = alertData.sound,
         blip = {
             sprite = alertData.blip?.sprite,
@@ -37,14 +37,14 @@ end
 --- @param alertType string
 --- @param alertData any
 function CDDispatch:policeAlert(alertType, alertData)
-    self:CustomAlert({bridge.framework.jobs.police?.names}, alertData)
+    self:customAlert({bridge.framework.jobs.police?.names}, alertData)
 end
 
 --- Sends an alert to EMS
 --- @param alertType string
 --- @param alertData any
 function CDDispatch:emsAlert(alertType, alertData)
-    self:CustomAlert({bridge.framework.jobs.ems?.names}, alertData)
+    self:customAlert({bridge.framework.jobs.ems?.names}, alertData)
 end
 
 return CDDispatch

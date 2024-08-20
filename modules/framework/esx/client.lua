@@ -1,9 +1,9 @@
-local Generic = require 'shared.class'
+local classes = require 'shared.class'
 local ESX = exports.es_extended:getSharedObject()
 
 ---ESX
----@class ESXFramework : OxClass
-local ESXFramework = lib.class('ESXFramework', Generic)
+---@class ESXFramework : FrameworkClient
+local ESXFramework = lib.class('ESXFramework', classes.FrameworkClient)
 
 function ESXFramework:contructor()
     self:super()
@@ -17,35 +17,36 @@ function ESXFramework:playerLoaded()
     return ESX.IsPlayerLoaded()
 end
 
+function ESXFramework:isPlayerJob(job)
+    local PlayerData = ESX.GetPlayerData()
+    return PlayerData?.job?.name == job
+end
+
+function ESXFramework:hasMoney(account, amount)
+    account = (account == 'cash') and 'money' or account
+    local accData = ESX.GetAccount(account)
+    if not accData then return false end
+    return accData.money >= amount
+end
+
 ---ESX Dispatch
----@class ESXDispatch : OxClass
-local ESXDispatch = lib.class('ESXDispatch', Generic)
+---@class ESXDispatch : DispatchClient
+local ESXDispatch = lib.class('ESXDispatch', classes.DispatchClient)
 
 function ESXDispatch:constructor()
     self:super()
     self.typeMap = {}
 end
 
----Sends an alert to police
----@param self Dispatch
----@param alertType string?
----@param alertData any
 function ESXDispatch:policeAlert(alertType, alertData)
     TriggerServerEvent('esx_service:notifyAllInService', alertData.title or alertData.msg, 'police')
 end
 
----Sends an alert to EMS
----@param self Dispatch
----@param alertType string?
----@param alertData any
 function ESXDispatch:emsAlert(alertType, alertData)
     TriggerServerEvent('esx_service:notifyAllInService', alertData.title or alertData.msg, 'ambulance')
 end
 
----Sends a custom alert
----@param jobs table
----@param alertData table
-function ESXDispatch:CustomAlert(jobs, alertData)
+function ESXDispatch:customAlert(jobs, alertData)
     for i = 1, #jobs do
         if jobs[i] == 'police' then
             self:policeAlert(nil, alertData)

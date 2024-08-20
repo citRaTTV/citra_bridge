@@ -37,7 +37,7 @@ local util = {
     end,
 
     --- Automatically detects the loaded framework
-    --- @return string?
+    --- @return FrameworkClient|FrameworkServer?
     getFramework = function(self)
         return self:getModule('framework', {
             esx = 'es_extended',
@@ -47,7 +47,7 @@ local util = {
     end,
 
     --- Automatically detects dispatch system
-    --- @return string?
+    --- @return DispatchClient?
     getDispatch = function(self)
         return self:getModule('dispatch', {
             cd = 'cd_dispatch',

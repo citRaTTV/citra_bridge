@@ -1,51 +1,53 @@
-local Generic = require 'shared.class'
+local classes = require 'shared.class'
 local ESX = exports.es_extended:getSharedObject()
 
----@class ESXFramework : OxClass
-local ESXFramework = lib.class('ESXFramework', Generic)
+---@class ESXFrameworkServer : FrameworkServer
+local ESXFrameworkServer = lib.class('ESXFramework', classes.FrameworkServer)
 
-function ESXFramework:contructor()
+function ESXFrameworkServer:contructor()
     self:super()
 end
 
----Get Player object
----@param source string | integer @Player source or citizen ID
----@return table
-function ESXFramework:getPlayer(source)
+function ESXFrameworkServer:getPlayer(source)
     local xPlayer = tonumber(source) and ESX.GetPlayerFromId(source) or ESX.GetPlayerFromIdentifier(source)
     if not xPlayer then lib.print.warn(('Unable to get player %s').format(source)) end
     return xPlayer
 end
 
----Remove money from a player
----@param source string | integer @Player source or citizen ID
----@param account? string
----@param amount integer
----@param note? string
----@return boolean @If amount was successfully taken from player
-function ESXFramework:removeMoney(source, account, amount, note)
+function ESXFrameworkServer:playerLoaded(source)
+    return (self:getPlayer(source) ~= nil)
+end
+
+function ESXFrameworkServer:getPlayerJob(source)
+    local xPlayer = self:getPlayer(source)
+    if not xPlayer then return {} end
+    local job = xPlayer.getJob()
+    return {
+        name = job?.name,
+        type = nil,
+        grade = job?.grade,
+    }
+end
+
+function ESXFrameworkServer:notify(source, msg, msgType, duration)
+    if type(source) ~= 'table' then source = { source } end
+end
+
+function ESXFrameworkServer:isPlayerJob(source, job)
+    local plyJob = self:getPlayerJob(source)
+    return plyJob.name == job
+end
+
+function ESXFrameworkServer:removeMoney(source, account, amount, note)
     local xPlayer = self:getPlayer(source)
     if not xPlayer then return false end
-    account = account == 'cash' and 'money' or account
-    local acc = xPlayer.getAccount(account)
-    if acc.money >= amount then
+    account = (account == 'cash') and 'money' or account
+    local accData = xPlayer.getAccount(account)
+    if accData.money >= amount then
         xPlayer.removeAccountMoney(account, amount)
         return true
     end
     return false
 end
 
----Check if player is loaded
----@param source string | integer @Player source or citizen ID
----@return boolean
-function ESXFramework:playerLoaded(source)
-    return true
-end
-
----QBCore Dispatch
----@class ESXDispatch : OxClass
-local ESXDispatch = lib.class('ESXDispatch', Generic)
-
-ESXFramework.dispatch = ESXDispatch
-
-return ESXFramework
+return ESXFrameworkServer

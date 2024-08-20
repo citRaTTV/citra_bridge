@@ -10,6 +10,7 @@
 ---@field flashtime integer
 ---@field label string
 ---@field scale number
+---@field shortRange boolean
 local Blip = {}
 
 ---Spawn blip
@@ -31,6 +32,7 @@ function Blip:create()
     if self.colour then SetBlipColour(blip, self.colour) end
     if self.display then SetBlipDisplay(blip, self.display) end
     if self.alpha then SetBlipAlpha(blip, self.alpha) end
+    if self.shortRange then SetBlipAsShortRange(blip, true) end
     SetBlipFlashes(blip, self.flash)
     if self.flash then SetBlipFlashInterval(blip, self.flashtime or 1000) end
     SetBlipScale(blip, self.scale or 1.0)
@@ -79,6 +81,7 @@ setmetatable(Blip, {
         self.display = data.display
         self.alpha = data.alpha
         self.flash = data.flash or false
+        self.shortRange = data.shortRange or false
         self.flashtime = data.flashtime
         self.scale = data.scale
         self:create()
