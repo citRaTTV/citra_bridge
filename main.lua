@@ -3,7 +3,7 @@ if GetCurrentResourceName() == 'citra_bridge' then
     return
 end
 
-local utils = require 'shared.utils'
+local utils = lib.load('shared.utils')
 
 local function setupBridge()
     local framework = utils:getFramework()

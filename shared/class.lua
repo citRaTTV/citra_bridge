@@ -1,4 +1,4 @@
-local util = require 'shared.utils'
+local util = lib.load('shared.utils')
 
 --- Generic super class
 --- @class Generic : OxClass

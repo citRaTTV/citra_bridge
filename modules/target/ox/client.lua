@@ -1,4 +1,4 @@
-local classes = require 'shared.class'
+local classes = lib.load('shared.class')
 
 ---ox_target
 ---@class OxTarget : TargetClient

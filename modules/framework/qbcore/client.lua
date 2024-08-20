@@ -1,5 +1,5 @@
-local classes = require 'shared.class'
-local config = require 'shared.config'
+local classes = lib.load('shared.class')
+local config = lib.load('shared.config')
 local QBCore = exports['qb-core']:GetCoreObject()
 
 AddEventHandler('QBCore:Client:UpdateObject', function()

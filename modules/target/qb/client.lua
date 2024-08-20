@@ -1,4 +1,4 @@
-local classes = require 'shared.class'
+local classes = lib.load('shared.class')
 
 ---qb-target
 ---@class QBTarget : TargetClient

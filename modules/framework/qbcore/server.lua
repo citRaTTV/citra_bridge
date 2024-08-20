@@ -1,6 +1,6 @@
-local classes = require 'shared.class'
-local util = require 'modules.util.server'
-local config = require 'shared.config'
+local classes = lib.load('shared.class')
+local util = lib.load('modules.util.server')
+local config = lib.load('shared.config')
 local QBCore = exports['qb-core']:GetCoreObject()
 
 ---@class QBFrameworkServer : FrameworkServer

@@ -1,5 +1,5 @@
-local classes = require 'shared.class'
-local config = require 'shared.config'
+local classes = lib.load('shared.class')
+local config = lib.load('shared.config')
 local ESX = exports.es_extended:getSharedObject()
 
 ---@class ESXFrameworkServer : FrameworkServer
