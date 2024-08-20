@@ -20,4 +20,10 @@ This resource aims to provide a standard API for multiple frameworks, dispatch s
 - oxmysql
 - Game build 2944 or higher
 
+### Config
+```
+Convars (server.cfg):
+citRa:notify = 'ox'|'framework'
+```
+
 ### Docs are pending. Use at your own risk

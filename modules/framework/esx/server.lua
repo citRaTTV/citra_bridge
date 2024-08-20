@@ -1,4 +1,5 @@
 local classes = require 'shared.class'
+local config = require 'shared.config'
 local ESX = exports.es_extended:getSharedObject()
 
 ---@class ESXFrameworkServer : FrameworkServer
@@ -30,6 +31,10 @@ function ESXFrameworkServer:getPlayerJob(source)
 end
 
 function ESXFrameworkServer:notify(source, msg, msgType, duration)
+    if config.notify == 'ox' then
+        self:notifyOx(source, msg, msgType, duration)
+        return
+    end
     if type(source) ~= 'table' then source = { source } end
 end
 

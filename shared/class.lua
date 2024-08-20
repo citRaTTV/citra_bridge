@@ -19,13 +19,33 @@ local FrameworkClient = lib.class('FrameworkClient', Generic)
 
 function FrameworkClient:constructor()
     self:super()
+    self.notifyMap = {
+        warn = 'warning',
+    }
+end
+
+---Notify using ox_lib
+---@param msg string|{ title:string, description:string, position?:string, icon?:string } #Message to send
+---@param msgType 'inform'|'success'|'warn'|'error'
+---@param duration integer
+function FrameworkClient:notifyOx(msg, msgType, duration)
+    if type(msg) ~= 'table' then msg = { title = msg } end
+    lib.notify({
+        title = msg.title,
+        description = msg.description,
+        duration = duration,
+        position = msg.position or 'center-right',
+        type = self.notifyMap[msgType] or msgType,
+        icon = msg.icon,
+    })
 end
 
 ---Notify player
----@param msg string|{ title:string, description:string } #Message to send
+---@param msg string|{ title:string, description:string, position?:string, icon?:string } #Message to send
 ---@param msgType 'inform'|'success'|'warn'|'error'
 ---@param duration integer #Duration in ms
 function FrameworkClient:notify(msg, msgType, duration)
+    self:notifyOx(msg, msgType, duration)
 end
 
 ---Checks if player is loaded
@@ -55,6 +75,9 @@ local FrameworkServer = lib.class('FrameworkServer', Generic)
 
 function FrameworkServer:constructor()
     self:super()
+    self.notifyMap = {
+        warn = 'warning',
+    }
 end
 
 ---Get Player object
@@ -82,12 +105,32 @@ function FrameworkServer:getPlayerJob(source)
     }
 end
 
+---Notify using ox_lib
+---@param msg string|{ title:string, description:string, position?:string, icon?:string } #Message to send
+---@param msgType 'inform'|'success'|'warn'|'error'
+---@param duration integer
+function FrameworkServer:notifyOx(source, msg, msgType, duration)
+    if type(msg) ~= 'table' then msg = { title = msg } end
+    if type(source) ~= 'table' then source = { source } end
+    for i = 1, #source do
+        TriggerClientEvent('ox_lib:notify', source[i], {
+            title = msg.title,
+            description = msg.description,
+            duration = duration,
+            position = msg.position or 'center-right',
+            type = self.notifyMap[msgType] or msgType,
+            icon = msg.icon,
+        })
+    end
+end
+
 ---Notify one or more clients
 ---@param source table | string | integer
----@param msg string|{ title:string, description:string } #Message to send
+---@param msg string|{ title:string, description:string, position?:string, icon?:string } #Message to send
 ---@param msgType 'inform'|'success'|'warn'|'error'
 ---@param duration integer #Duration in ms
 function FrameworkServer:notify(source, msg, msgType, duration)
+    self:notifyOx(source, msg, msgType, duration)
 end
 
 ---Checks if player has a job

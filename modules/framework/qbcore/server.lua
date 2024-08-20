@@ -1,5 +1,6 @@
 local classes = require 'shared.class'
 local util = require 'modules.util.server'
+local config = require 'shared.config'
 local QBCore = exports['qb-core']:GetCoreObject()
 
 ---@class QBFrameworkServer : FrameworkServer
@@ -26,6 +27,10 @@ function QBFrameworkServer:getPlayerJob(source)
 end
 
 function QBFrameworkServer:notify(source, msg, msgType, duration)
+    if config.notify == 'ox' then
+        self:notifyOx(source, msg, msgType, duration)
+        return
+    end
     if type(source) ~= "table" then source = {source} end
     for i = 1, #source do
         TriggerClientEvent('QBCore:Notify', source[i], msg, msgType, duration)

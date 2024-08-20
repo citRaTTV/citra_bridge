@@ -1,4 +1,5 @@
 local classes = require 'shared.class'
+local config = require 'resources_citra.citra_bridge.shared.config'
 local QBCore = exports['qb-core']:GetCoreObject()
 
 AddEventHandler('QBCore:Client:UpdateObject', function()
@@ -14,6 +15,10 @@ function QBFramework:contructor()
 end
 
 function QBFramework:notify(msg, msgType, duration)
+    if config.notify == 'ox' then
+        self:notifyOx(msg, msgType, duration)
+        return
+    end
     QBCore.Functions.Notify(msg, msgType, duration)
 end
 

@@ -1,4 +1,5 @@
 local classes = require 'shared.class'
+local config = require 'shared.config'
 local ESX = exports.es_extended:getSharedObject()
 
 ---ESX
@@ -10,6 +11,10 @@ function ESXFramework:contructor()
 end
 
 function ESXFramework:notify(msg, msgType, duration)
+    if config.notify == 'ox' then
+        self:notifyOx(msg, msgType, duration)
+        return
+    end
     ESX.ShowNotification(msg, msgType == 'primary' and 'info' or msgType, duration)
 end
 
