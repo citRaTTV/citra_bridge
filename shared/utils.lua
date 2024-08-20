@@ -1,6 +1,7 @@
 local util = {
     --- Scans for started resource and returns a matching path
-    --- @return string?
+    --- @return Generic?
+    --- @private
     scanResources = function(self, tbl)
         for path, resource in pairs(tbl) do
             if GetResourceState(resource) ~= 'missing' then return path end
@@ -17,44 +18,43 @@ local util = {
         return exports[resource][func](nil, ...)
     end,
 
+    ---Get module by type
+    ---@param self table
+    ---@param name string
+    ---@param supported table
+    ---@return Generic?
+    ---@private
+    getModule = function(self, name, supported)
+        local found, _ = self:scanResources(supported)
+        local parentPath = found and ("modules.%s.%s"):format(name, found)
+
+        if parentPath then
+            local forContext = pcall(lib.load, (("%s.%s"):format(parentPath, lib.context)))
+            return forContext and require(("%s.%s"):format(parentPath, lib.context)) or nil
+        end
+
+        if lib.context == 'server' then lib.print.error('No supported ' .. name .. ' found') end
+    end,
+
     --- Automatically detects the loaded framework
     --- @return string?
     getFramework = function(self)
-        local supported = {
+        return self:getModule('framework', {
             esx = 'es_extended',
             qbcore = 'qb-core',
             qbox = 'qbx_core',
-        }
-        local found, _ = self:scanResources(supported)
-
-        if found then
-            local framework = require('modules.framework.' .. found .. '.' .. lib.context)
-            return framework
-        end
-
-        if lib.context == 'server' then lib.print.error('No supported framework found') end
+        })
     end,
 
     --- Automatically detects dispatch system
     --- @return string?
     getDispatch = function(self)
-        local supported = {
+        return self:getModule('dispatch', {
             cd = 'cd_dispatch',
-            ps = 'ps_dispatch',
-        }
-        local found = self:scanResources(supported)
+            ps = 'ps-dispatch',
+        })
+    end,
 
-        if found then
-            return require('modules.dispatch.' .. found .. '.' .. lib.context)
-        else
-            local framework = self:getFramework()
-            if framework?.dispatch then
-                if lib.context == 'server' then lib.print.warn('No supported dispatch found. Falling back to framework dispatch. This will have limited functionality') end
-                return framework.dispatch
-            end
-
-            if lib.context == 'server' then lib.print.error('No supported dispatch found') end
-        end
     end,
 
     --- Get util functions
