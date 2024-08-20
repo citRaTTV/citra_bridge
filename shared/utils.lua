@@ -55,6 +55,14 @@ local util = {
         })
     end,
 
+    ---Automatically detects targetting system
+    ---@param self table
+    ---@return TargetClient?
+    getTarget = function(self)
+        return self:getModule('target', {
+            ox = 'ox_target',
+            qb = 'qb-target',
+        })
     end,
 
     --- Get util functions

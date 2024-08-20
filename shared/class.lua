@@ -178,9 +178,67 @@ end
 function DispatchClient:emsAlert(alertType, alertData)
 end
 
+---Generic target class (client)
+---@class TargetClient : Generic
+local TargetClient = lib.class('TargetClient', Generic)
+
+function TargetClient:constructor()
+    self:super()
+end
+
+---Add an entity target
+---@param entity integer
+---@param options table
+---@param distance number?
+function TargetClient:addEntity(entity, options, distance)
+end
+
+---Remove an entity target
+---@param entity integer
+---@param options table? #If not specified, will remove all options
+function TargetClient:removeEntity(entity, options)
+end
+
+---Add model targets
+---@param models table|string|integer
+---@param options table
+---@param distance number?
+function TargetClient:addModels(models, options, distance)
+end
+
+---Remove model targets
+---@param models table|string|integer
+---@param options table? #If not specified, will remove all options
+function TargetClient:removeModels(models, options)
+end
+
+---Add vehicle targets
+---@param options table
+---@param distance number?
+function TargetClient:addVehicles(options, distance)
+end
+
+---Remove vehicle targets
+---@param options table? #If not specified, will remove all options
+function TargetClient:removeVehicles(options)
+end
+
+---Add a zone target
+---@param zoneData { name:string, type:'poly'|'box'|'sphere', coords:vector4, radius?:number, size?:vector3, points?:vector3[], height?:number }
+---@param options any
+---@param distance any
+function TargetClient:addZone(zoneData, options, distance)
+end
+
+---Remove a zone target
+---@param zoneName string
+function TargetClient:removeZone(zoneName)
+end
+
 return {
     Generic = Generic,
     FrameworkClient = FrameworkClient,
     FrameworkServer = FrameworkServer,
     DispatchClient = DispatchClient,
+    TargetClient = TargetClient,
 }

@@ -11,8 +11,13 @@ This resource aims to provide a standard API for multiple frameworks, dispatch s
 - ps-dispatch
 - cd_dispatch
 
+### Current Target Support
+- ox_target
+- qb-target
+
 ### Dependencies
 - ox_lib
+- oxmysql
 - Game build 2944 or higher
 
 ### Docs are pending. Use at your own risk
