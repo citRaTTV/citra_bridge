@@ -1,5 +1,5 @@
 local classes = require 'shared.class'
-local config = require 'resources_citra.citra_bridge.shared.config'
+local config = require 'shared.config'
 local QBCore = exports['qb-core']:GetCoreObject()
 
 AddEventHandler('QBCore:Client:UpdateObject', function()

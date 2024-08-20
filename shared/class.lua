@@ -5,7 +5,6 @@ local util = require 'shared.utils'
 local Generic = lib.class('Generic')
 
 function Generic:constructor()
-    self.util = util
     self.resource = ''
 end
 

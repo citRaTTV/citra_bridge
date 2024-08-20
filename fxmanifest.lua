@@ -22,6 +22,7 @@ shared_scripts {
 files {
     'shared/utils.lua',
     'shared/class.lua',
+    'shared/config.lua',
     'modules/**/client.lua',
     'modules/**/**/client.lua',
 }
