@@ -1,3 +1,8 @@
+if GetCurrentResourceName() == 'citra_bridge' then
+    if lib.context == 'server' then lib.versionCheck('citRaTTV/citra_bridge') end
+    return
+end
+
 local utils = require 'shared.utils'
 
 local function setupBridge()
@@ -11,6 +16,6 @@ local function setupBridge()
     }
 end
 
-if lib.context == 'server' then lib.versionCheck('citRaTTV/citra_bridge') end
+local bridge = setupBridge()
 
-_ENV.bridge = setupBridge()
+_ENV.bridge = bridge
