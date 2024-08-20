@@ -4,7 +4,7 @@ lua54 'yes'
 use_experimental_fxv2_oal 'yes'
 author 'citRa'
 description 'Framework, inventory, etc. bridge'
-version '0.1.0'
+version '0.1.1'
 
 dependencies {
     '/server:6166',
