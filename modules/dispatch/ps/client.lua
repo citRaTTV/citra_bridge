@@ -15,6 +15,7 @@ function PSDispatch:constructor()
         hunting = 'Hunting',
         speeding = 'SpeedingVehicle',
         fight = 'Fight',
+        houseRobbery = 'HouseRobbery',
     }
 end
 
