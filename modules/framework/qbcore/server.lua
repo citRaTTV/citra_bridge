@@ -85,6 +85,14 @@ end
 
 function QBFrameworkServer:getVehModelInfo(modelName)
     local vehData = QBCore.Shared.Vehicles[modelName]
+    if type(modelName) == 'number' then
+        for _, data in pairs(QBCore.Shared.Vehicles) do
+            if data.hash == modelName then
+                vehData = data
+                break
+            end
+        end
+    end
     return {
         make = vehData?.brand or 'Unknown Make',
         model = vehData?.name or 'Unknown Model'
