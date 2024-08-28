@@ -36,8 +36,8 @@ function Blip:create()
     SetBlipFlashes(blip, self.flash)
     if self.flash then SetBlipFlashInterval(blip, self.flashtime or 1000) end
     SetBlipScale(blip, self.scale or 1.0)
-    BeginTextCommandSetBlipName(self.label)
-    AddTextComponentSubstringBlipName(blip)
+    BeginTextCommandSetBlipName("STRING")
+    AddTextComponentSubstringPlayerName(self.label)
     EndTextCommandSetBlipName(blip)
     self._blip = blip
 end
@@ -45,6 +45,7 @@ end
 ---Despawn blip
 function Blip:delete()
     if not self._blip then return end
+    self:disableRoute()
     RemoveBlip(self._blip)
     if self._radiusBlip then RemoveBlip(self._radiusBlip) end
     self._blip = nil
@@ -67,12 +68,27 @@ function Blip:setLabel(label)
     EndTextCommandSetBlipName(self._blip)
 end
 
+---Enable route to blip
+---@param colour integer
+function Blip:enableRoute(colour)
+    if not self._blip then return end
+    SetBlipRoute(self._blip, true)
+    SetBlipRouteColour(self._blip, colour)
+end
+
+---Disable route to blip
+function Blip:disableRoute()
+    if not self._blip then return end
+    SetBlipRoute(self._blip, false)
+end
+
 setmetatable(Blip, {
     __index = function(self, key)
         return rawget(self, key)
     end,
     __call = function(self, data)
         data = data or {}
+        self.label = data.label
         self.entity = data.entity
         self.coords = data.coords
         self.radius = data.radius
