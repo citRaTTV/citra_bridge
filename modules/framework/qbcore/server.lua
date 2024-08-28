@@ -102,7 +102,7 @@ end
 function QBFrameworkServer:getPlayerVehs(source, colFilter)
     local QPlayer = self:getPlayer(source)
     if not QPlayer then return {} end
-    return util.db.select('player_vehicles', colFilter, { key = 'citizenid', value = QPlayer.PlayerData.citizenid })
+    return util.db.select('player_vehicles', colFilter, {{ key = 'citizenid', value = QPlayer.PlayerData.citizenid }})
 end
 
 function QBFrameworkServer:getOwnedVehs(colFilter, modelFilter)
