@@ -68,6 +68,11 @@ function FrameworkClient:hasMoney(account, amount)
     return false
 end
 
+---Toggles weather syncing
+---@param toggle boolean
+function FrameworkClient:weatherSync(toggle)
+end
+
 ---Generic framework class (server)
 ---@class FrameworkServer : Generic
 local FrameworkServer = lib.class('FrameworkServer', Generic)
@@ -138,6 +143,28 @@ end
 ---@return boolean hasJob
 function FrameworkServer:isPlayerJob(source, job)
     return false
+end
+
+---Check if a player is on duty
+---@param source string|number
+---@return boolean
+function FrameworkServer:isPlayerOnDuty(source)
+    return false
+end
+
+---Get value for player metadata
+---@param source string|number
+---@param key any
+---@return any value
+function FrameworkServer:getPlayerMeta(source, key)
+    return nil
+end
+
+---Set value of player metadata
+---@param source string|number
+---@param key any
+---@param value any
+function FrameworkServer:setPlayerMeta(source, key, value)
 end
 
 ---Add money to a player
