@@ -17,9 +17,9 @@ function QBFrameworkServer:contructor()
 end
 
 function QBFrameworkServer:getPlayer(source)
-    local QPlayer = tonumber(source) and QBCore.Functions.GetPlayer(source) or (
-        QBCore.Functions.GetPlayerByCitizenId(source) or QBCore.Functions.GetOfflinePlayerByCitizenId(source))
-    if not QPlayer then lib.print.warn(('Unable to get player %s').format(source)) end
+    local QPlayer = (tonumber(source) and QBCore.Functions.GetPlayer(tonumber(source))) or QBCore.Functions.GetPlayerByCitizenId(source) or
+        QBCore.Functions.GetOfflinePlayerByCitizenId(source)
+    if not QPlayer then lib.print.warn(('Unable to get player %s'):format(source)) end
     return QPlayer
 end
 
