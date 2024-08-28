@@ -1,4 +1,5 @@
 local classes = lib.load('shared.class')
+local config = lib.load('shared.config')
 
 ---qb-target
 ---@class QBTarget : TargetClient
@@ -69,6 +70,7 @@ function QBTarget:addZone(zoneData, options, distance)
             name = zoneData.name,
             minZ = zoneData.points[1].z - (zoneData.height / 2),
             maxZ = zoneData.points[1].z + (zoneData.height / 2),
+            debugPoly = config.debug,
         }, { options = self:convertOptions(options), distance = distance or 2.5 })
     elseif zoneData.type == 'box' then
         self:export('AddBoxZone', zoneData.name, zoneData.coords.xyz, zoneData.size.x, zoneData.size.y, {
@@ -76,10 +78,12 @@ function QBTarget:addZone(zoneData, options, distance)
             heading = zoneData.coords.w,
             minZ = zoneData.coords.z - (zoneData.size.z / 2),
             maxZ = zoneData.coords.z + (zoneData.size.z / 2),
+            debugPoly = config.debug,
         }, { options = self:convertOptions(options), distance = distance or 2.5 })
     elseif zoneData.type == 'sphere' then
         self:export('AddCircleZone', zoneData.name, zoneData.coords.xyz, zoneData.radius, {
-            name = zoneData.name
+            name = zoneData.name,
+            debugPoly = config.debug,
         }, { options = self:convertOptions(options), distance = distance or 2.5 })
     end
 end
