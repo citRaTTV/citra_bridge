@@ -50,6 +50,10 @@ function QBFramework:hasMoney(account, amount)
     return (PlayerData.money?[account] or 0) > amount
 end
 
+function QBFramework:weatherSync(toggle)
+    TriggerEvent('qb-weathersync:client:' .. (toggle and 'Enable' or 'Disable') .. 'Sync')
+end
+
 ---QBCore Dispatch
 ---@class QBDispatch : DispatchClient
 local QBDispatch = lib.class('QBDispatch', classes.DispatchClient)

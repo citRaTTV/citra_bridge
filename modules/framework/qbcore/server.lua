@@ -49,6 +49,28 @@ function QBFrameworkServer:isPlayerJob(source, job)
     return (QPlayer and (QPlayer.PlayerData?.job?.name == job or QPlayer.PlayerData?.job?.type == job))
 end
 
+function QBFrameworkServer:isPlayerOnDuty(source)
+    local QPlayer = self:getPlayer(source)
+    return (QPlayer and QPlayer.PlayerData?.job?.onduty)
+end
+
+function QBFrameworkServer:getPlayerMeta(source, key)
+    local QPlayer = self:getPlayer(source)
+    return QPlayer?.Functions.GetMetaData(key)
+end
+
+function QBFrameworkServer:setPlayerMeta(source, key, value)
+    local QPlayer = self:getPlayer(source)
+    if not QPlayer then return end
+    QPlayer.Functions.SetMetaData(key, value)
+end
+
+function QBFrameworkServer:addMoney(source, account, amount, note)
+    local QPlayer = self:getPlayer(source)
+    if not QPlayer then return false end
+    return QPlayer.Functions.AddMoney(account, amount, note)
+end
+
 function QBFrameworkServer:removeMoney(source, account, amount, note)
     local QPlayer = self:getPlayer(source)
     if not QPlayer then return false end
