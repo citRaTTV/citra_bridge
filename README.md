@@ -24,6 +24,7 @@ This resource aims to provide a standard API for multiple frameworks, dispatch s
 ```
 Convars (server.cfg):
 citRa:notify = 'ox'|'framework'
+citRa:debug = 'true'|'false'
 ```
 
 ### Docs are pending. Use at your own risk

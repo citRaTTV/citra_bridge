@@ -12,6 +12,7 @@ function Generic:export(func, ...)
     util:runExport(self.resource, func, ...)
 end
 
+---@alias notifyMsg string|{ title:string, description:string, position?:string, icon?:string, iconAnimation?:string }
 ---Generic framework class (client)
 ---@class FrameworkClient : Generic
 local FrameworkClient = lib.class('FrameworkClient', Generic)
@@ -24,7 +25,7 @@ function FrameworkClient:constructor()
 end
 
 ---Notify using ox_lib
----@param msg string|{ title:string, description:string, position?:string, icon?:string } #Message to send
+---@param msg notifyMsg #Message to send
 ---@param msgType 'inform'|'success'|'warn'|'error'
 ---@param duration integer
 function FrameworkClient:notifyOx(msg, msgType, duration)
@@ -36,11 +37,12 @@ function FrameworkClient:notifyOx(msg, msgType, duration)
         position = msg.position or 'center-right',
         type = self.notifyMap[msgType] or msgType,
         icon = msg.icon,
+        iconAnimation = msg.iconAnimation,
     })
 end
 
 ---Notify player
----@param msg string|{ title:string, description:string, position?:string, icon?:string } #Message to send
+---@param msg notifyMsg #Message to send
 ---@param msgType 'inform'|'success'|'warn'|'error'
 ---@param duration integer #Duration in ms
 function FrameworkClient:notify(msg, msgType, duration)
