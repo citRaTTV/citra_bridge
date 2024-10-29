@@ -247,6 +247,19 @@ end
 function DispatchClient:emsAlert(alertType, alertData)
 end
 
+---Generic Dispatch class (server)
+---@class DispatchServer : Generic
+local DispatchServer = lib.class('DispatchServer', Generic)
+
+function DispatchServer:constructor()
+    self:super()
+end
+
+---Send a custom alert
+---@param alertData table
+function DispatchServer:alert(alertData)
+end
+
 ---Generic target class (client)
 ---@class TargetClient : Generic
 local TargetClient = lib.class('TargetClient', Generic)
@@ -309,5 +322,6 @@ return {
     FrameworkClient = FrameworkClient,
     FrameworkServer = FrameworkServer,
     DispatchClient = DispatchClient,
+    DispatchServer = DispatchServer,
     TargetClient = TargetClient,
 }
