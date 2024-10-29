@@ -64,6 +64,14 @@ function QBTarget:removeVehicles(options)
     self:export('RemoveGlobalVehicle', options)
 end
 
+function QBTarget:addPeds(options, distance)
+    self:export('AddGlobalPed', { options = self:convertOptions(options), distance = distance or 2.5 })
+end
+
+function QBTarget:removePeds(options)
+    self:export('RemoveGlobalPed', options)
+end
+
 function QBTarget:addZone(zoneData, options, distance)
     if zoneData.type == 'poly' then
         self:export('AddPolyZone', zoneData.name, zoneData.points, {

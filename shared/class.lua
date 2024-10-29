@@ -305,6 +305,17 @@ end
 function TargetClient:removeVehicles(options)
 end
 
+---Add global ped targets
+---@param options table
+---@param distance number?
+function TargetClient:addPeds(options, distance)
+end
+
+---Remove global ped targets
+---@param options table?
+function TargetClient:removePeds(options)
+end
+
 ---Add a zone target
 ---@param zoneData { name:string, type:'poly'|'box'|'sphere', coords:vector4, radius?:number, size?:vector3, points?:vector3[], height?:number }
 ---@param options any
