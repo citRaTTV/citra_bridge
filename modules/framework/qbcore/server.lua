@@ -95,7 +95,8 @@ function QBFrameworkServer:getVehModelInfo(modelName)
     end
     return {
         make = vehData?.brand or 'Unknown Make',
-        model = vehData?.name or 'Unknown Model'
+        model = vehData?.name or 'Unknown Model',
+        price = vehData?.price,
     }
 end
 

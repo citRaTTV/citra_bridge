@@ -9,6 +9,12 @@ end)
 ---QBCore
 ---@class QBFramework : FrameworkClient
 local QBFramework = lib.class('QBFramework', classes.FrameworkClient)
+QBFramework.jobs = {
+    police = {
+        names = json.decode(GetConvar('citRa:framework:policejobs', "['police']")),
+        type = 'leo',
+    },
+}
 
 function QBFramework:contructor()
     self:super()
@@ -31,6 +37,22 @@ end
 
 function QBFramework:playerLoaded()
     return LocalPlayer.state.isLoggedIn
+end
+
+function QBFramework:getVehModelInfo(modelName)
+    local vehData = QBCore.Shared.Vehicles[modelName]
+    if type(modelName) == 'number' then
+        for _, data in pairs(QBCore.Shared.Vehicles) do
+            if data.hash == modelName then
+                vehData = data
+                break
+            end
+        end
+    end
+    return {
+        make = vehData?.brand or 'Unknown Make',
+        model = vehData?.name or 'Unknown Model'
+    }
 end
 
 ---Check if player has job
