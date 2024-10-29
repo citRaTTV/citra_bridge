@@ -1,7 +1,7 @@
 local classes = require 'shared.class'
 
---- ps-dispatch bridge class
---- @class Dispatch : DispatchClient
+---ps-dispatch bridge class
+---@class Dispatch : DispatchClient
 local PSDispatch = lib.class('PSDispatch', classes.DispatchClient)
 
 function PSDispatch:constructor()
@@ -63,7 +63,7 @@ end
 --- @param alertData table?
 function PSDispatch:policeAlert(alertType, alertData)
     if alertType and self.typeMap[alertType] then
-        self:export(self.typeMap[alertType])
+        self:export(self.typeMap[alertType], alertData)
     elseif alertData then
         self:customAlert(bridge.framework.jobs.police?.type, alertData)
     else
