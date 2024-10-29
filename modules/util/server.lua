@@ -15,6 +15,11 @@ local function debug(query)
     lib.print.debug("Executing query: " .. query)
 end
 
+lib.callback.register('citra_bridge:server:getEntityCoords', function(_, netId)
+    local entity = NetworkGetEntityFromNetworkId(netId)
+    return entity ~= 0 and GetEntityCoords(entity)
+end)
+
 return {
     db = {
         ---Performs a select query

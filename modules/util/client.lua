@@ -1,6 +1,8 @@
 ---@class Blip
 ---@field coords table
 ---@field entity integer
+---@field netId integer
+---@field active boolean
 ---@field radius number
 ---@field sprite integer
 ---@field colour integer
@@ -25,9 +27,14 @@ function Blip:create()
         end
     elseif self.entity then
         blip = AddBlipForEntity(self.entity)
+    elseif self.netId then
+        self.active = true
+        self:entityWatcher()
+        return
     else
         return
     end
+    self.active = true
     if self.sprite then SetBlipSprite(blip, self.sprite) end
     if self.colour then SetBlipColour(blip, self.colour) end
     if self.display then SetBlipDisplay(blip, self.display) end
@@ -44,11 +51,18 @@ end
 
 ---Despawn blip
 function Blip:delete()
+    self.active = false
     if not self._blip then return end
     self:disableRoute()
     RemoveBlip(self._blip)
     if self._radiusBlip then RemoveBlip(self._radiusBlip) end
     self._blip = nil
+end
+
+function Blip:updateCoords(coords)
+    if not self._blip then return end
+    self.coords = coords
+    SetBlipCoords(self._blip, coords.x, coords.y, coords.z)
 end
 
 ---Toggle flash state of blip
@@ -82,6 +96,30 @@ function Blip:disableRoute()
     SetBlipRoute(self._blip, false)
 end
 
+---Watch to ensure blip on entity
+---@protected
+function Blip:entityWatcher()
+    CreateThread(function()
+        while self.active do
+            if not self.entity and NetworkDoesEntityExistWithNetworkId(self.netId) then
+                self.entity = NetworkGetEntityFromNetworkId(self.netId)
+                self:create()
+            elseif self.entity and not DoesEntityExist(self.entity) then
+                local coords = lib.callback.await('citra_bridge:server:getEntityCoords', nil, self.netId)
+                if coords then
+                    self.entity = nil
+                    self.coords = lib.callback.await('citra_bridge:server:getEntityCoords', nil, self.netId)
+                    self:create()
+                end
+            elseif self.netId and not NetworkDoesEntityExistWithNetworkId(self.netId) then
+                local coords = lib.callback.await('citra_bridge:server:getEntityCoords', nil, self.netId)
+                if coords then self:updateCoords(coords) end
+            end
+            Wait(1000)
+        end
+    end)
+end
+
 setmetatable(Blip, {
     __index = function(self, key)
         return rawget(self, key)
@@ -90,6 +128,8 @@ setmetatable(Blip, {
         data = data or {}
         self.label = data.label
         self.entity = data.entity
+        self.netId = data.netId
+        self.active = true
         self.coords = data.coords
         self.radius = data.radius
         self.sprite = data.sprite
