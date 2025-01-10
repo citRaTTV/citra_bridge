@@ -64,6 +64,16 @@ local util = {
         })
     end,
 
+    ---Automatically detects banking system
+    ---@param self table
+    ---@return BankingServer?
+    getBank = function(self)
+        return self:getModule('bank', {
+            qb = 'qb-banking',
+            renewed = 'Renewed-Banking',
+        })
+    end,
+
     --- Get util functions
     --- @return table
     getUtil = function(self)

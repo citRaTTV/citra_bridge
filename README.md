@@ -16,6 +16,9 @@ This resource aims to provide a standard API for multiple frameworks, dispatch s
 - ox_target
 - qb-target
 
+### Current Bank Support
+- Renewed-Banking
+
 ### Dependencies
 - ox_lib
 - oxmysql

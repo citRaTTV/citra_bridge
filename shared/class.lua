@@ -422,6 +422,46 @@ end
 function TargetClient:removeZone(zoneName)
 end
 
+---Generic Banking class (server)
+---@class BankingServer : Generic
+local BankingServer = lib.class('BankingServer', Generic)
+
+---@alias transactionData { account:string|integer, amount:number, title:string, message:string, name:string, otherParty:string, type:'deposit'|'withdraw' }
+---@alias accountData { owner:string|integer, name:string }
+
+---Create statement
+---@param data transactionData
+function BankingServer:statement(data)
+end
+
+---Deposit transaction
+---@param data transactionData
+---@return boolean success
+function BankingServer:deposit(data)
+    return false
+end
+
+---Withdraw transaction
+---@param data transactionData
+---@return boolean success
+function BankingServer:withdraw(data)
+    return false
+end
+
+---Check balance
+---@param account string|integer
+---@return number balance
+function BankingServer:balance(account)
+    return 0
+end
+
+---Create account
+---@param data accountData
+---@return boolean success
+function BankingServer:newAccount(data)
+    return false
+end
+
 return {
     Generic = Generic,
     FrameworkClient = FrameworkClient,
@@ -429,4 +469,5 @@ return {
     DispatchClient = DispatchClient,
     DispatchServer = DispatchServer,
     TargetClient = TargetClient,
+    BankingServer = BankingServer,
 }
