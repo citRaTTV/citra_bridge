@@ -4,7 +4,7 @@ local config = lib.load('shared.config')
 local QBCore = exports['qb-core']:GetCoreObject()
 
 ---@class QBFrameworkServer : FrameworkServer
-local QBFrameworkServer = lib.class('QBFramework', classes.FrameworkServer)
+local QBFrameworkServer = lib.class('QBFrameworkServer', classes.FrameworkServer)
 
 function QBFrameworkServer:contructor()
     self:super()
@@ -23,13 +23,39 @@ function QBFrameworkServer:getPlayer(source)
     return QPlayer
 end
 
+function QBFrameworkServer:getPlayerInfo(source)
+    local QPlayer = self:getPlayer(source)
+    if not QPlayer then return {} end
+    return {
+        name = {
+            first = QPlayer.PlayerData?.charinfo?.firstname,
+            last = QPlayer.PlayerData?.charinfo?.lastname,
+        },
+        job = self:getPlayerJob(source),
+        gang = {
+            name = QPlayer.PlayerData?.gang?.name,
+            grade = tonumber(QPlayer.PlayerData?.gang?.grade?.level or 0)
+        },
+        id = QPlayer.PlayerData?.citizenid,
+    }
+end
+
 function QBFrameworkServer:getPlayerJob(source)
     local QPlayer = self:getPlayer(source)
     return {
         name = QPlayer?.PlayerData?.job?.name,
+        label = QBCore.Shared.Jobs[QPlayer?.PlayerData?.job?.name] or 'Unknown',
         type = QPlayer?.PlayerData?.job?.type,
-        grade = QPlayer?.PlayerData?.job?.grade?.level or 0,
+        grade = tonumber(QPlayer?.PlayerData?.job?.grade?.level or 0),
+        boss = QPlayer.PlayerData?.job?.isboss or false,
     }
+end
+
+function QBFrameworkServer:getJobInfo(name)
+    return QBCore.Shared.Jobs[name]
+end
+
+function QBFrameworkServer:revive(source)
 end
 
 function QBFrameworkServer:notify(source, msg, msgType, duration)
@@ -52,6 +78,13 @@ end
 function QBFrameworkServer:isPlayerOnDuty(source)
     local QPlayer = self:getPlayer(source)
     return (QPlayer and QPlayer.PlayerData?.job?.onduty)
+end
+
+function QBFrameworkServer:setPlayerDuty(source, duty)
+    local QPlayer = self:getPlayer(source)
+    duty = duty or (not self:isPlayerOnDuty(source))
+    QPlayer.Functions.SetJobDuty(duty)
+    return duty
 end
 
 function QBFrameworkServer:getPlayerMeta(source, key)
@@ -122,6 +155,28 @@ end
 function QBFrameworkServer:getOwnedVeh(plate, colFilter)
     local vehs = util.db.select('player_vehicles', colFilter, { key = 'plate', value = plate })
     return vehs and vehs[1]
+end
+
+function QBFrameworkServer:getOnDuty(job)
+    local QPlayers = QBCore.Functions.GetQBPlayers()
+    local count, players = 0, {}
+
+    for source, QPlayer in pairs(QPlayers) do
+        if QPlayer.PlayerData?.job.name == job then
+            count += 1
+            players[#players+1] = source
+        end
+    end
+
+    return count, players
+end
+
+function QBFrameworkServer:getGangs()
+    return QBCore.Shared.Gangs
+end
+
+function QBFrameworkServer:getJobs()
+    return QBCore.Shared.Jobs
 end
 
 return QBFrameworkServer

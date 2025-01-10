@@ -55,18 +55,22 @@ function QBFramework:getVehModelInfo(modelName)
     }
 end
 
----Check if player has job
----@param job string
----@return boolean
 function QBFramework:isPlayerJob(job)
     local PlayerData = QBCore.Functions.GetPlayerData()
     return (PlayerData.job?.name == job or PlayerData.job?.type == job)
 end
 
----Check if player has money
----@param account 'cash'|'bank'
----@param amount number
----@return boolean
+function QBFramework:getPlayerJob()
+    local PlayerData = QBCore.Functions.GetPlayerData()
+    return {
+        name = PlayerData.job?.name,
+        label = PlayerData.job?.label,
+        type = PlayerData.job?.type,
+        grade = tonumber(PlayerData.job?.grade.level) or 0,
+        boss = PlayerData.job?.isboss or false,
+    }
+end
+
 function QBFramework:hasMoney(account, amount)
     local PlayerData = QBCore.Functions.GetPlayerData()
     return (PlayerData.money?[account] or 0) > amount
@@ -74,6 +78,29 @@ end
 
 function QBFramework:weatherSync(toggle)
     TriggerEvent('qb-weathersync:client:' .. (toggle and 'Enable' or 'Disable') .. 'Sync')
+end
+
+function QBFramework:getJobInfo(name)
+    return QBCore.Shared.Jobs[name]
+end
+
+function QBFramework:toggleDuty()
+    TriggerServerEvent('QBCore:ToggleDuty')
+end
+
+function QBFramework:wearingGloves()
+    return QBCore.Functions.IsWearingGloves()
+end
+
+function QBFramework:isBleeding()
+    local p = promise:new()
+    local bleeding = false
+    QBCore.Functions.TriggerCallback('hospital:GetPlayerBleeding', function(isBleeding)
+        bleeding = isBleeding
+        p:resolve()
+    end)
+    Citizen.Await(p)
+    return bleeding
 end
 
 ---QBCore Dispatch

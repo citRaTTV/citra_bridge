@@ -62,6 +62,18 @@ function FrameworkClient:isPlayerJob(job)
     return false
 end
 
+---Retreive player job info
+---@return table
+function FrameworkClient:getPlayerJob()
+    return {}
+end
+
+---Get player info
+---@return table
+function FrameworkClient:getPlayerInfo()
+    return {}
+end
+
 ---Checks if player has enough money
 ---@param account 'cash'|'bank'
 ---@param amount number
@@ -73,6 +85,29 @@ end
 ---Toggles weather syncing
 ---@param toggle boolean
 function FrameworkClient:weatherSync(toggle)
+end
+
+---Get job details
+---@param name string
+---@return table jobInfo
+function FrameworkClient:getJobInfo(name)
+    return {}
+end
+
+---Toggle player job duty
+function FrameworkClient:toggleDuty()
+end
+
+---Check if wearing gloves
+---@return boolean wearingGloves
+function FrameworkClient:wearingGloves()
+    return false
+end
+
+---Check if bleeding
+---@return boolean isBleeding
+function FrameworkClient:isBleeding()
+    return false
 end
 
 ---Generic framework class (server)
@@ -111,6 +146,17 @@ function FrameworkServer:getPlayerJob(source)
     }
 end
 
+---Get info about a job
+---@param name string
+---@return table?
+function FrameworkServer:getJobInfo(name)
+end
+
+---Revive player
+---@param source string|integer
+function FrameworkServer:revive(source)
+end
+
 ---Notify using ox_lib
 ---@param msg string|{ title:string, description:string, position?:string, icon?:string } #Message to send
 ---@param msgType 'inform'|'success'|'warn'|'error'
@@ -139,6 +185,13 @@ function FrameworkServer:notify(source, msg, msgType, duration)
     self:notifyOx(source, msg, msgType, duration)
 end
 
+---Get player info
+---@param source string|integer
+---@return table playerInfo
+function FrameworkServer:getPlayerInfo(source)
+    return {}
+end
+
 ---Checks if player has a job
 ---@param source string | number
 ---@param job string #Job name or type
@@ -152,6 +205,14 @@ end
 ---@return boolean
 function FrameworkServer:isPlayerOnDuty(source)
     return false
+end
+
+---Set a player's job duty
+---@param source string|number
+---@param duty boolean
+---@return boolean onDuty
+function FrameworkServer:setPlayerDuty(source, duty)
+    return duty
 end
 
 ---Get value for player metadata
@@ -220,6 +281,26 @@ end
 ---@param colFilter string[]? #Filter columns
 ---@return table? vehicle
 function FrameworkServer:getOwnedVeh(plate, colFilter)
+    return {}
+end
+
+---Get on duty count & player list for job
+---@param job string
+---@return integer
+---@return table
+function FrameworkServer:getOnDuty(job)
+    return 0, {}
+end
+
+---Get all gangs
+---@return table
+function FrameworkServer:getGangs()
+    return {}
+end
+
+---Get all jobs
+---@return table
+function FrameworkServer:getJobs()
     return {}
 end
 
