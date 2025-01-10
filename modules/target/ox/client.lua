@@ -23,17 +23,21 @@ function OXTarget:convertOptions(options, distance)
             iconColor = opt.iconColour or opt.iconColor,
             distance = distance,
             groups = opt.require?.job or opt.require?.gang,
-            items = opt.require.item,
-            canInteract = opt.require.func,
-            onSelect = opt.func,
+            items = opt.require?.item,
+            canInteract = opt.require?.func,
+            onSelect = opt.func and function(data)
+                opt.func(data.entity, data)
+            end,
             event = opt.event?.type == 'client' and opt.event?.name,
             serverEvent = opt.event?.type == 'server' and opt.event?.name,
+            bones = opt.bones,
         }
     end
     return oxOpts
 end
 
 function OXTarget:addEntity(entity, options, distance)
+    if not options or #options < 1 then return end
     local export = 'addLocalEntity'
     if NetworkGetEntityIsNetworked(entity) then
         entity = NetworkGetNetworkIdFromEntity(entity)
@@ -52,6 +56,7 @@ function OXTarget:removeEntity(entity, options)
 end
 
 function OXTarget:addModels(models, options, distance)
+    if not options or #options < 1 then return end
     self:export('addModel', models, self:convertOptions(options, distance))
 end
 
@@ -60,6 +65,7 @@ function OXTarget:removeModels(models, options)
 end
 
 function OXTarget:addVehicles(options, distance)
+    if not options or #options < 1 then return end
     self:export('addGlobalVehicle', self:convertOptions(options, distance))
 end
 
@@ -67,18 +73,37 @@ function OXTarget:removeVehicles(options)
     self:export('removeGlobalVehicle', options)
 end
 
+function OXTarget:addPeds(options, distance)
+    if not options or #options < 1 then return end
+    self:export('addGlobalPed', self:convertOptions(options, distance))
+end
+
+function OXTarget:removePeds(options)
+    self:export('removeGlobalPed', options)
+end
+
+function OXTarget:addPlayers(options, distance)
+    if not options or #options < 1 then return end
+    self:export('addGlobalPlayer', self:convertOptions(options, distance))
+end
+
+function OXTarget:removePlayers(options)
+    self:export('removeGlobalPlayer', options)
+end
+
 function OXTarget:addZone(zoneData, options, distance)
+    if not options or #options < 1 then return end
     if zoneData.type == 'poly' then
         self:export('addPolyZone', {
-            points = zoneData.points, thickness = zoneData.height, options = self:convertOptions(options, distance)
+            name = zoneData.name, points = zoneData.points, thickness = zoneData.height, options = self:convertOptions(options, distance)
         })
     elseif zoneData.type == 'box' then
         self:export('addBoxZone', {
-            coords = zoneData.coords.xyz, size = zoneData.size, rotation = zoneData.coords.w, options = self:convertOptions(options, distance)
+            name = zoneData.name, coords = zoneData.coords.xyz, size = zoneData.size, rotation = zoneData.coords.w, options = self:convertOptions(options, distance)
         })
     elseif zoneData.type == 'sphere' then
         self:export('addSphereZone', {
-            coords = zoneData.coords.xyz, radius = zoneData.radius, options = self:convertOptions(options, distance)
+            name = zoneData.name, coords = zoneData.coords.xyz, radius = zoneData.radius, options = self:convertOptions(options, distance)
         })
     end
 end

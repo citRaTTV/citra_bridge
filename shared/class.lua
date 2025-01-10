@@ -399,6 +399,17 @@ end
 function TargetClient:removePeds(options)
 end
 
+---Add global player targets
+---@param options table
+---@param distance number?
+function TargetClient:addPlayers(options, distance)
+end
+
+---Remove global player targets
+---@param options table?
+function TargetClient:removePlayers(options)
+end
+
 ---Add a zone target
 ---@param zoneData { name:string, type:'poly'|'box'|'sphere', coords:vector4, radius?:number, size?:vector3, points?:vector3[], height?:number }
 ---@param options any
