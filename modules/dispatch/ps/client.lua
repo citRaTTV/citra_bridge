@@ -10,12 +10,14 @@ function PSDispatch:constructor()
     self.typeMap = {
         vehTheft = 'VehicleTheft',
         vehJacking = 'CarJacking',
+        vehBoosting = 'CarBoost',
         shooting = 'Shooting',
         shootingVeh = 'VehicleShooting',
         hunting = 'Hunting',
         speeding = 'SpeedingVehicle',
         fight = 'Fight',
         houseRobbery = 'HouseRobbery',
+        fleecaRobbery = 'FleecaBankRobbery',
     }
 end
 
