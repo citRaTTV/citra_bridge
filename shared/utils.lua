@@ -39,10 +39,9 @@ local util = {
     --- Automatically detects the loaded framework
     --- @return FrameworkClient|FrameworkServer?
     getFramework = function(self)
-        return self:getModule('framework', {
+        return self:getModule('framework', { qbx = 'qbx_core' }) or self:getModule('framework', {
             esx = 'es_extended',
             qbcore = 'qb-core',
-            qbox = 'qbx_core',
         })
     end,
 
